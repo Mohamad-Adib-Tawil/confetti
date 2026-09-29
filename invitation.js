@@ -66,6 +66,8 @@ function fillContent() {
   const host = c.host || c.bride;
 
   setText("celebrantName", name || null);
+  setText("coverLabel", `دعوة ${c.occasion || "مناسبة"}`);
+  setText("heroKicker", `حفل ${c.occasion || "المناسبة"}`);
 
   // صورة الطفل في الترويسة — تظهر فقط عند توفّر صورة صالحة
   const _imgs = (c.images) || {};
@@ -105,11 +107,13 @@ function fillContent() {
     vp.src = _venue;
   }
 
-  setText("heroGreet", `عيد ميلاد ${c.celebrant || c.groom}`);
+  setText("heroGreet", `${c.occasion || "مناسبة"} ${c.celebrant || c.groom}`);
   setText("heroDate", [c.dateText, c.timeText].filter(Boolean).join(" • "));
   setText("invitationText", c.invitationText);
   setText("weddingDate", c.dateText);
   setText("weddingTime", c.timeText);
+  setText("calendarDateText", c.dateText);
+  setText("calendarTimeText", c.timeText);
   setText("venueName", c.venueName);
   setText("venueAddr", c.venueAddr);
   setText("closingNote", c.closingNote);
@@ -140,7 +144,12 @@ function fillContent() {
   buildNotes(c.notes);
   buildContact(c);
 
-  if (name) document.title = `دعوة عيد ميلاد ${name}`;
+  if (name) document.title = `دعوة ${c.occasion || "مناسبة"} ${name}`;
+  const description = [c.dateText, c.venueName].filter(Boolean).join(" • ");
+  document.querySelector('meta[name="description"]')?.setAttribute("content", description);
+  document.querySelector('meta[property="og:title"]')?.setAttribute("content", document.title);
+  document.querySelector('meta[property="og:description"]')?.setAttribute("content", description);
+  if (c.shareImage) document.querySelector('meta[property="og:image"]')?.setAttribute("content", c.shareImage);
 }
 
 function setText(id, value) { const el = document.getElementById(id); if (el && value != null) el.textContent = value; }
