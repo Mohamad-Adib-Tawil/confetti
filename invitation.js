@@ -161,9 +161,16 @@ function buildTimeline(items) {
   items.forEach((it) => {
     const li = document.createElement("li");
     li.className = "timeline__item";
-    li.innerHTML = `<span class="timeline__dot" aria-hidden="true"></span>
-      <span class="timeline__time">${it.time}</span>
-      <span class="timeline__title">${it.title}</span>`;
+    const dot = document.createElement("span");
+    dot.className = "timeline__dot";
+    dot.setAttribute("aria-hidden", "true");
+    const time = document.createElement("span");
+    time.className = "timeline__time";
+    time.textContent = it.time || "";
+    const title = document.createElement("span");
+    title.className = "timeline__title";
+    title.textContent = it.title || "";
+    li.append(dot, time, title);
     ul.appendChild(li);
   });
 }
@@ -176,7 +183,13 @@ function buildNotes(items) {
   items.forEach((txt, i) => {
     const li = document.createElement("li");
     li.className = "notes__item";
-    li.innerHTML = `<span class="notes__mark" aria-hidden="true">${marks[i % marks.length]}</span><span>${txt}</span>`;
+    const mark = document.createElement("span");
+    mark.className = "notes__mark";
+    mark.setAttribute("aria-hidden", "true");
+    mark.textContent = marks[i % marks.length];
+    const text = document.createElement("span");
+    text.textContent = txt;
+    li.append(mark, text);
     ul.appendChild(li);
   });
   /* قسم بلا تنويهات لا يُترك بعنوانه — والملاحظة البارزة المحقونة تُنقل خارجه قبل إخفائه */
